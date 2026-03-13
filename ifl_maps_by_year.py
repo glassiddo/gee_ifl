@@ -69,7 +69,8 @@ raw_region_names = [ # only select the ones to run
     #'canada_farwest', 'canada_midwest', 'canada_centre',
     #'russia_veryfareast', 'russia_midfareast', 'russia_centraleast',
     #'russia_centralwestsouth', 'russia_centralwestnorth', 'russia_farwest',
-    'russia_midwest', 'russia_mideastsouth', 'russia_mideastnorth'
+    'russia_midwest', 'russia_mideastnorth',
+    #'russia_mideastsouth'
 ]
 
 regions_to_process = {k: v for k, v in regions.items() if k in raw_region_names}
