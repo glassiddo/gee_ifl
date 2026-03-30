@@ -1,5 +1,12 @@
 import ee
 
+# those regions as subregions of the IFL 2020 maps
+# they were created as the full IFL map is too large for running the code
+# hence, we split the map into smaller areas, by manually drawing the regions such that the borders would not cut through IFL patches
+# the borders only go through roads/rivers that existed pre-2020
+# this prevents our methodology from attributing loss because of creation of smaller areas (which would have happened if we had 'cut through' regions, e.g., by simply creating a grid)
+# note that not all of the IFL areas are here (nearly all), as for some areas we did not have concession data or they composed of very small IFL patches
+
 regions = {
     'africa_eastofcongo': ee.Geometry.Polygon([
         [30.5, 7.0],

@@ -45,7 +45,7 @@ def get_official_delta(map_focus):
 forest_threshold = 30 # at least 30% forest cover
 export_scale = 30 # the most computationally expensive part - export at 30m. but necessary to maintain shape
 mid_coarse_scale = 100 # the loss is grouped and buffered anyway, so can afford to use coarser scale
-my_tile_scale = 8 # between 1-16, change depending on performance
+my_tile_scale = 4 # between 1-16, change depending on performance
 max_connected_size = 1024 # maximal value
 exclude_fire = True # exclude fire pixels
 gte_threshold_patches = 3 # at least 3 connected pixels. tested also 4/5. given we're only allowing loss in known location, use a low threshold
@@ -58,19 +58,19 @@ coarse_area_scale = 200 # for area calculation, coarser resolution
 buffer_radius_sml = 100 # to retrieve the full shapes of the loss areas that are below the area threshold 
 
 raw_region_names = [ # only select the ones to run
-    #'southamerica_southedge', 'southamerica_north3', 'southamerica_north2',
-    #'southamerica_north1', 'southamerica_north4', 'central_america',
-    #'southamerica_south', 'southamerica_northwest',
+    'southamerica_southedge', 'southamerica_north3', 'southamerica_north2',
+    'southamerica_north1', 'southamerica_north4', 'central_america',
+    'southamerica_south', 'southamerica_northwest',
     #'southamerica_east', 'southamerica_central', 'southamerica_northeast1', 
     'southamerica_northeast2', 'southamerica_centralwest', 
-    # 'africa_eastofcongo', 'africa_westofcongo'
+    'africa_eastofcongo', 'africa_westofcongo'
     'westindonesia_malaysia', 'eastindonesia_png',
     'canada_fareast', 'canada_mideast'
-    #'canada_farwest', 'canada_midwest', 'canada_centre',
-    #'russia_veryfareast', 'russia_midfareast', 'russia_centraleast',
+    'canada_farwest', 'canada_midwest', 'canada_centre',
+    'russia_midfareast', 'russia_centraleast',
     #'russia_centralwestsouth', 'russia_centralwestnorth', 'russia_farwest',
-    'russia_midwest', 'russia_mideastnorth',
-    #'russia_mideastsouth'
+    'russia_midwest', 'russia_mideastnorth'
+    #'russia_mideastsouth', 'russia_veryfareast'
 ]
 
 regions_to_process = {k: v for k, v in regions.items() if k in raw_region_names}
