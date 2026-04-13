@@ -58,19 +58,20 @@ coarse_area_scale = 200 # for area calculation, coarser resolution
 buffer_radius_sml = 100 # to retrieve the full shapes of the loss areas that are below the area threshold 
 
 raw_region_names = [ # only select the ones to run
-    'southamerica_southedge', 'southamerica_north3', 'southamerica_north2',
+    'southamerica_southedge', 
+    'southamerica_north3', 'southamerica_north2',
     'southamerica_north1', 'southamerica_north4', 'central_america',
     'southamerica_south', 'southamerica_northwest',
-    #'southamerica_east', 'southamerica_central', 'southamerica_northeast1', 
+    'southamerica_east', 'southamerica_central', 'southamerica_northeast1', 
     'southamerica_northeast2', 'southamerica_centralwest', 
     'africa_eastofcongo', 'africa_westofcongo'
     'westindonesia_malaysia', 'eastindonesia_png',
     'canada_fareast', 'canada_mideast'
     'canada_farwest', 'canada_midwest', 'canada_centre',
     'russia_midfareast', 'russia_centraleast',
-    #'russia_centralwestsouth', 'russia_centralwestnorth', 'russia_farwest',
-    'russia_midwest', 'russia_mideastnorth'
-    #'russia_mideastsouth', 'russia_veryfareast'
+    'russia_centralwestsouth', 'russia_centralwestnorth', 'russia_farwest',
+    'russia_midwest', 'russia_mideastnorth',
+    'russia_mideastsouth', 'russia_veryfareast'
 ]
 
 regions_to_process = {k: v for k, v in regions.items() if k in raw_region_names}
