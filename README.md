@@ -1,12 +1,8 @@
 # Annual loss of intact forest landscapes
 
-Google Earth Engine code for estimating annual IFL loss from satellite forest-loss data and spatial criteria. Developed for Houngbedji, Isman, Plakhtieva and Wren-Lewis (2026), *What are the Limits to Voluntary Certification? Evidence from an Attempt to Protect Biodiversity* (working paper).
-
-## Visual case study
-
 [Read the case study (PDF)](docs/ifl-case-study.pdf) 
 
-The project covers annual loss estimates for 2001-2024. The method described here and illustrated in the case study is the later implementation used for the 2021-2024 estimates, starting from the 2020 IFL map. Earlier periods used an earlier method.
+Google Earth Engine code for estimating annual IFL loss from satellite forest-loss data and spatial criteria. Developed for Houngbedji, Isman, Plakhtieva and Wren-Lewis (2026), *What are the Limits to Voluntary Certification? Evidence from an Attempt to Protect Biodiversity* (working paper).
 
 ## Repository contents
 
