@@ -1,14 +1,62 @@
-This estimates the annual loss of IFL areas globally at a 30m resolution using Google Earth Engine (Gorelick et al. 2017). The process involved identifying human driven forest loss that caused areas to be disqualified from the criteria of IFL described by Popatov et al. (2017). 
+# Annual loss of intact forest landscapes
 
-Important note: the code and methodology here was only used for the 2020-2024 preiod; for 2000-13, 2013-16 and 2016-20 periods there was a different methodology.
+Google Earth Engine code for estimating annual IFL loss from satellite forest-loss data and spatial criteria. Developed by Iddo Glass through discussions with researchers for Houngbedji, Isman, Plakhtieva and Wren-Lewis (2026), *What are the Limits to Voluntary Certification? Evidence from an Attempt to Protect Biodiversity* (working paper).
 
-The 2020-24 methodology:
+## Visual case study
 
-We started from the global IFL map as the baseline. For each subsequent year ($t$), we identified forest loss pixels from Hansen et al. (2013) that occurred within the IFL boundaries of the previous year ($t−1$) in areas with at least 30\% forest cover. To isolate human-caused loss, we excluded forest loss which was caused by fires (Tyukavina et al., 2022). We tried to distinguish between noise and significant human involvement (such as road construction). We first identified neighbouring forest loss pixels (including diagonal neighbours), keeping groups that are composed of at least five connected pixels (0.45 ha). As infrastructure like narrow roads may appear as fragmented patches of connected pixels, we applied a buffer of 1km around each patch of connected forest loss pixels, and merged the overlapping buffered patches. To exclude areas where little human disturbance was documented, we measured the number of non-fire forest loss pixels inside each merged-buffered patch. Only patches in which at least 50 pixels of non-fire forest loss (4.5 ha) occurred were considered to be sufficient for IFL loss. 
+[Read the case study (PDF)](docs/ifl-case-study.pdf) · [Download the editable presentation (PPTX)](docs/ifl-case-study.pptx)
 
-We then 'removed' the loss from the initial IFL annual map. We then applied a morphological opening to follow the criterion of Popatov et al (2017), which requires appendages and corridors to have a width of at least 2 km. This includes initially eroding (inner-buffering) the remaining IFL areas by 1km, which drops appendages and corridors with a width of below 2km.  Then, the eroded geometries were dilated (outer-buffering) by 1.5km, and intersected with the original geometries. The last step allows the core region to 'regrow' back into its original boundary, without re-introducing the narrow corridors and appendages. In practice, this step slightly smooths the geometries, effectively rounding off sharp areas that are similar to appendages. It also keeps the 'bases' of the appendages and corridors (small sections of the appendages that are closest to the main 'core') as IFL. 
+The project covers annual loss estimates for 2001-2024. The method described here and illustrated in the case study is the later implementation used for the 2021-2024 estimates, starting from the 2020 IFL map. Earlier periods used an earlier method.
 
-Finally, we computed the area of the remaining geometries and kept areas that are larger than 500 km^2 (50,000 hectares), following the requirement of Popatov et al. (2017). We did not apply the width rule of the IFL as it appeared to have limited impact when already removing appendages, and was computationally expensive (in addition to the already computationally expensive method described here). 
+## Repository contents
 
-The method was run recursively from 2001 to 2020. For each year, the IFL map was updated by subtracting the areas defined as IFL loss from the previous year. To ensure a clean baseline, we also applied the 'appendage/corridor' and 'area' rules to the raw baseline IFL map before beginning the analysis in t+1. This prevented us from misattributing the removal of pre-existing narrow appendages or small patches as forest loss in 2001.
+| File | Purpose |
+| --- | --- |
+| `ifl_maps_by_year.py` | Two-stage annual processing and task orchestration in the Earth Engine Python API |
+| `regions_ifl.py` | Manually drawn processing regions, designed to avoid cutting through IFL patches |
+| `combine_regions.js` | GEE Code Editor helper for mosaicking regional outputs |
+| `legacy/create_shapefile_from_assets.js` | Export helper for the earlier 2001-2020 assets and naming conventions |
+| `docs/` | Case-study PDF and editable presentation |
+
+## Method in the current code
+
+1. **Start from a reference map.** Each configured interval starts from its official IFL baseline. A preliminary step applies the spatial filters to the baseline before annual updates.
+2. **Find annual disturbance.** Select Hansen forest-loss pixels inside the previous year's remaining IFL, with at least 30% tree cover in 2000. Exclude mapped fire loss where the fire dataset covers the year.
+3. **Group disturbance.** Keep groups of at least three connected pixels, including diagonal neighbours. Buffer by 1km, merge overlapping areas through vectorisation at 100m, and retain buffered groups with a loss-mask sum of at least 30 evaluated at 100m. This threshold is not a count of 30 native 30m pixels and should not be converted directly into a hectare threshold.
+4. **Filter narrow parts.** Erode the remaining IFL by 1km, regrow by 1.5km, and intersect with the area before this operation. This approximates the 2km corridor/appendage criterion while limiting regrowth to the original area. The 10km broadest-width test was not applied because it changed little and was expensive.
+5. **Filter small patches.** Save the intermediate at 30m, then vectorise at 200m to identify patches smaller than 500km². Buffer the small-patch mask by 100m before removing it from the detailed raster.
+6. **Constrain and repeat.** Restore baseline areas outside the official interval-loss mask, save the final 30m output, and use it for the following year. For 2021-2024, the interval-loss mask comes from the 2020 and 2025 IFL snapshots.
+
+The script stores remaining-IFL maps as intermediate/final assets. Annual loss estimates are obtained from changes between successive outputs. These are estimates of loss timing, not exact annual ground truth.
+
+### Data
+
+- Hansen global forest change: `UMD/hansen/global_forest_change_2024_v1_12`.
+- Fire-related forest loss: `users/sashatyu/2001-2023_fire_forest_loss_annual`. This does not cover 2024.
+- IFL snapshots: 2000, 2013, 2016, 2020 and 2025. The script references project-specific Earth Engine copies.
+
+## Running the code
+
+These are research scripts, not a self-contained reproduction package. They require an authenticated Earth Engine account, a configured cloud project, and access to the referenced input assets and an output asset folder.
+
+Install the Earth Engine Python API and authenticate, then review the configuration at the top of `ifl_maps_by_year.py`: cloud project, asset paths, interval, region selection and processing thresholds. The default interval is 2020-2024, producing annual updates for 2021-2024.
+
+**Running the Python script starts export tasks.** It checks for existing assets and active tasks, then advances each region through two stages. Call `check_status_and_run()` again to refresh task status and advance completed stages. Existing assets are skipped by name, so use a new output prefix/folder when changing parameters.
+
+The JavaScript helpers run in the online GEE Code Editor. Review their years and asset naming before use. The legacy shapefile helper targets earlier outputs and is not a ready-made export script for the later asset scheme.
+
+## Validation and limitations
+
+Validation combined comparisons with reference maps, precision/recall, tests without restricting loss to known snapshot intervals, and imagery inspection.
+
+For the delivered constrained estimates, precision against snapshot loss is nearly 100% by design. It is not independent evidence that every detected disturbance is human-caused or that the assigned year is correct. Regional recall and the corresponding scope are shown in the case study.
+
+Riverbeds can resemble roads in forest-loss data. The fire layer ends in 2023, coarser area checks can miss small remnants, and the morphology is an approximation of the spatial criteria. Processing remained computationally expensive, which limited reruns and parameter testing.
+
+## References
+
+- Hansen et al. (2013). *High-resolution global maps of 21st-century forest cover change*. Science, 342, 850-853. https://doi.org/10.1126/science.1244693
+- Potapov et al. (2017). *The last frontiers of wilderness: Tracking loss of intact forest landscapes from 2000 to 2013*. Science Advances, 3, e1600821. https://doi.org/10.1126/sciadv.1600821
+- Tyukavina et al. (2022). *Global trends of forest loss due to fire from 2001 to 2019*. Frontiers in Remote Sensing, 3, 825190. https://doi.org/10.3389/frsen.2022.825190
+- IFL Mapping Team (2025). *Intact Forest Landscapes Extent and Change, 2000-2025*. https://zenodo.org/records/18011599
 

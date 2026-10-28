@@ -64,9 +64,9 @@ raw_region_names = [ # only select the ones to run
     'southamerica_south', 'southamerica_northwest',
     'southamerica_east', 'southamerica_central', 'southamerica_northeast1', 
     'southamerica_northeast2', 'southamerica_centralwest', 
-    'africa_eastofcongo', 'africa_westofcongo'
+    'africa_eastofcongo', 'africa_westofcongo',
     'westindonesia_malaysia', 'eastindonesia_png',
-    'canada_fareast', 'canada_mideast'
+    'canada_fareast', 'canada_mideast',
     'canada_farwest', 'canada_midwest', 'canada_centre',
     'russia_midfareast', 'russia_centraleast',
     'russia_centralwestsouth', 'russia_centralwestnorth', 'russia_farwest',
