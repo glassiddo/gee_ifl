@@ -8,11 +8,11 @@ Google Earth Engine code for estimating annual IFL loss from satellite forest-lo
 
 | File | Purpose |
 | --- | --- |
-| `ifl_maps_by_year.py` | Two-stage annual processing and task orchestration in the Earth Engine Python API |
-| `regions_ifl.py` | Manually drawn processing regions, designed to avoid cutting through IFL patches |
-| `combine_regions.js` | GEE Code Editor helper for mosaicking regional outputs |
-| `legacy/create_shapefile_from_assets.js` | Export helper for the earlier 2001-2020 assets and naming conventions |
-| `docs/` | Case-study PDF and editable presentation |
+| `code/ifl_maps_by_year.py` | Two-stage annual processing and task orchestration in the Earth Engine Python API |
+| `code/regions_ifl.py` | Manually drawn processing regions, designed to avoid cutting through IFL patches |
+| `code/combine_regions.js` | GEE Code Editor helper for mosaicking regional outputs |
+| `code/create_shapefile_from_assets.js` | Export helper for the earlier 2001-2020 assets and naming conventions |
+| `docs/` | Case-study PDF |
 
 ## Method in the current code
 
