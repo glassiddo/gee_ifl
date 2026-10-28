@@ -1,10 +1,10 @@
 # Annual loss of intact forest landscapes
 
-Google Earth Engine code for estimating annual IFL loss from satellite forest-loss data and spatial criteria. Developed by Iddo Glass through discussions with researchers for Houngbedji, Isman, Plakhtieva and Wren-Lewis (2026), *What are the Limits to Voluntary Certification? Evidence from an Attempt to Protect Biodiversity* (working paper).
+Google Earth Engine code for estimating annual IFL loss from satellite forest-loss data and spatial criteria. Developed for Houngbedji, Isman, Plakhtieva and Wren-Lewis (2026), *What are the Limits to Voluntary Certification? Evidence from an Attempt to Protect Biodiversity* (working paper).
 
 ## Visual case study
 
-[Read the case study (PDF)](docs/ifl-case-study.pdf) · [Download the editable presentation (PPTX)](docs/ifl-case-study.pptx)
+[Read the case study (PDF)](docs/ifl-case-study.pdf) 
 
 The project covers annual loss estimates for 2001-2024. The method described here and illustrated in the case study is the later implementation used for the 2021-2024 estimates, starting from the 2020 IFL map. Earlier periods used an earlier method.
 
@@ -34,24 +34,6 @@ The script stores remaining-IFL maps as intermediate/final assets. Annual loss e
 - Hansen global forest change: `UMD/hansen/global_forest_change_2024_v1_12`.
 - Fire-related forest loss: `users/sashatyu/2001-2023_fire_forest_loss_annual`. This does not cover 2024.
 - IFL snapshots: 2000, 2013, 2016, 2020 and 2025. The script references project-specific Earth Engine copies.
-
-## Running the code
-
-These are research scripts, not a self-contained reproduction package. They require an authenticated Earth Engine account, a configured cloud project, and access to the referenced input assets and an output asset folder.
-
-Install the Earth Engine Python API and authenticate, then review the configuration at the top of `ifl_maps_by_year.py`: cloud project, asset paths, interval, region selection and processing thresholds. The default interval is 2020-2024, producing annual updates for 2021-2024.
-
-**Running the Python script starts export tasks.** It checks for existing assets and active tasks, then advances each region through two stages. Call `check_status_and_run()` again to refresh task status and advance completed stages. Existing assets are skipped by name, so use a new output prefix/folder when changing parameters.
-
-The JavaScript helpers run in the online GEE Code Editor. Review their years and asset naming before use. The legacy shapefile helper targets earlier outputs and is not a ready-made export script for the later asset scheme.
-
-## Validation and limitations
-
-Validation combined comparisons with reference maps, precision/recall, tests without restricting loss to known snapshot intervals, and imagery inspection.
-
-For the delivered constrained estimates, precision against snapshot loss is nearly 100% by design. It is not independent evidence that every detected disturbance is human-caused or that the assigned year is correct. Regional recall and the corresponding scope are shown in the case study.
-
-Riverbeds can resemble roads in forest-loss data. The fire layer ends in 2023, coarser area checks can miss small remnants, and the morphology is an approximation of the spatial criteria. Processing remained computationally expensive, which limited reruns and parameter testing.
 
 ## References
 
